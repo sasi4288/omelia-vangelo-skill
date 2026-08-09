@@ -5,8 +5,8 @@
 import html as H
 from build_apparato import GOSPEL_SEGMENTS, ANCHORS
 from build_document import (
-    author_sequence, SOURCE_NAMES, CONCEPTS, THREADS, SAINTS, APPROFONDIMENTI,
-    SOURCE_ORDER, SOURCE_LETTERS, GOSPEL_REF, LITURGICAL_LABEL, FOOTER_CREDITS, DOC_TITLE,
+    author_sequence, SOURCE_NAMES, SOURCE_LETTERS, SOURCE_COLORS, CONCEPTS, THREADS, SAINTS, APPROFONDIMENTI,
+    SOURCE_ORDER, GOSPEL_REF, LITURGICAL_LABEL, FOOTER_CREDITS, DOC_TITLE,
 )
 
 CSS = """
@@ -89,9 +89,11 @@ hr.rule { border: none; border-top: 0.5pt solid var(--rule); margin: 3mm 0 5mm; 
 .thread { margin-bottom: 7.5mm; }
 .thread-title { font-family: Palatino, Georgia, serif; font-weight: 700; font-size: var(--fs-h2); margin: 0 0 2mm; }
 .thread-path { font-size: var(--fs-thesis); font-weight: 600; margin: 0 0 2.4mm; display: flex; align-items: center; gap: 1.8mm; flex-wrap: wrap; }
-.thread-path .num-tag { font-family: Palatino, Georgia, serif; font-weight: 700; border: 0.6pt solid var(--rule); border-radius: 50%; width: 6.2mm; height: 6.2mm; display: inline-flex; align-items: center; justify-content: center; font-size: 9pt; }
+.thread-path .num-tag { font-family: Palatino, Georgia, serif; font-weight: 700; border: 0.6pt solid var(--rule); border-radius: 50%; width: 6.2mm; height: 6.2mm; display: inline-flex; align-items: center; justify-content: center; font-size: 9pt; color: var(--ink); text-decoration: none; }
 .thread-path .arrow { color: var(--muted-solid); }
-.thread-note { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-soft); margin: 0; }
+.thread-note { font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-soft); margin: 0 0 2mm; text-align: justify; }
+.thread-saint { font-size: var(--fs-caption); color: var(--muted-solid); margin: 0; }
+.thread-saint a { color: var(--muted-solid); }
 
 /* ---- Saints page ---- */
 .saint-head { display: flex; align-items: baseline; gap: 3.5mm; margin-bottom: 1.5mm; }
@@ -130,6 +132,12 @@ footer.credits { margin-top: 7mm; padding-top: 3mm; border-top: 0.5pt solid var(
 
 def esc(s):
     return H.escape(s, quote=False)
+
+
+def badge_html(slug):
+    letter = SOURCE_LETTERS[slug]
+    colors = SOURCE_COLORS.get(slug, {"bg": "#2c2924", "text": "#f5f3ee"})
+    return f'<span class="badge" style="background:{colors["bg"]}; color:{colors["text"]};">{letter}</span>'
 
 
 def gospel_structured_by_anchor():
@@ -171,6 +179,14 @@ GOSPEL_STRUCTURED = gospel_structured_by_anchor()
 GOSPEL_BY_ANCHOR = gospel_plain_by_anchor(GOSPEL_STRUCTURED)
 ANCHOR_LABELS = {a["num"]: a["label"] for a in ANCHORS}
 ANCHOR_ORDER = [a["num"] for a in ANCHORS]
+SAINT_NAMES_BY_SLUG = {s["slug"]: s["name"] for s in SAINTS}
+
+# ancore -> lista di (lettera_filo, titolo_filo), per i link di ritorno negli approfondimenti
+THREADS_BY_ANCHOR = {}
+for _t in THREADS:
+    _letter = _t["title"].split()[1]
+    for _n in _t["path"]:
+        THREADS_BY_ANCHOR.setdefault(_n, []).append(_letter)
 
 
 MM_PER_PT = 0.3528
@@ -287,10 +303,9 @@ def render_concepts_page():
         parts.append(f'<p class="concept-title">{esc(c["title"])}</p>')
         parts.append(f'<p class="concept-intro">{esc(c["intro"])}</p>')
         for slug, text in c["views"]:
-            letter = SOURCE_LETTERS[slug]
             name = SOURCE_NAMES[slug]
             parts.append('<div class="view-row">')
-            parts.append(f'<span class="badge">{letter}</span>')
+            parts.append(badge_html(slug))
             parts.append(f'<div><p class="source-name">{esc(name)}</p><p class="view-text">{esc(text)}</p></div>')
             parts.append('</div>')
         parts.append('</div>')
@@ -305,15 +320,23 @@ def render_threads_page():
     parts.append('<p class="sub">Percorsi che ricombinano gli ancoraggi tra le fonti in una possibile narrazione. Sono ipotesi di lavoro: la scelta e l\'ordine restano da vagliare.</p>')
     parts.append('<hr class="rule">')
     for t in THREADS:
-        parts.append('<div class="thread">')
+        letter = t["title"].split()[1]  # "Filo A — ..." -> "A"
+        parts.append(f'<div class="thread" id="filo-{letter.lower()}">')
         parts.append(f'<p class="thread-title">{esc(t["title"])}</p>')
         parts.append('<div class="thread-path">')
         for i, n in enumerate(t["path"]):
             if i > 0:
                 parts.append('<span class="arrow">&#8594;</span>')
-            parts.append(f'<span class="num-tag">{n}</span>')
+            parts.append(f'<a class="num-tag" href="#approf-{n}">{n}</a>')
         parts.append('</div>')
         parts.append(f'<p class="thread-note">{esc(t["note"])}</p>')
+        saint_link = t.get("saint_link")
+        if saint_link:
+            parts.append(
+                f'<p class="thread-saint">{saint_link["emoji"]} '
+                f'<a href="#santo-{saint_link["slug"]}">Eco in {esc(SAINT_NAMES_BY_SLUG.get(saint_link["slug"], saint_link["slug"]))}</a>'
+                f' — {esc(saint_link["phrase"])}</p>'
+            )
         parts.append('</div>')
     parts.append('</div>')
     return "".join(parts)
@@ -377,6 +400,10 @@ def render_approfondimenti_section():
             links = [f'<a href="#santo-{slug}">{esc(saint_by_slug[slug])}</a>' for slug in vedi_anche if slug in saint_by_slug]
             if links:
                 parts.append(f'<span class="vedi-anche">↩ Santi: {" · ".join(links)}</span>')
+        thread_letters = THREADS_BY_ANCHOR.get(num)
+        if thread_letters:
+            thread_links = [f'<a href="#filo-{l.lower()}">Filo {l}</a>' for l in thread_letters]
+            parts.append(f'<span class="vedi-anche">↩ Fili logici: {" · ".join(thread_links)}</span>')
         parts.append('</div>')
         parts.append('</div>')
     parts.append(f'<footer class="credits">{esc(FOOTER_CREDITS)}</footer>')

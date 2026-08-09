@@ -7,7 +7,7 @@ Riusa GOSPEL_SEGMENTS e ANCHORS da build_apparato.py come base.
 
 COSA CAMBIA OGNI VOLTA (vedi SKILL.md per il procedimento completo):
 - GOSPEL_REF, LITURGICAL_LABEL, DOC_TITLE, FOOTER_CREDITS qui sotto
-- SOURCE_ORDER / SOURCE_NAMES / SOURCE_LETTERS: 4 fonti se domenica
+- SOURCE_ORDER / SOURCE_NAMES / SOURCE_LETTERS / SOURCE_COLORS: 4 fonti se domenica
   (rosini, armellini, curtaz, lectio), 3 se infrasettimanale (epicoco, curtaz, lectio)
 - build_apparato.py: GOSPEL_SEGMENTS (testo del Vangelo del giorno, segmentato) e
   ANCHORS (le glosse delle fonti per ciascun ancoraggio)
@@ -26,11 +26,25 @@ DOC_TITLE = f"{GOSPEL_REF} — Vangelo, glosse per autore, concetti, sintesi, sa
 # Ordine delle fonti in questo documento: 4 per la domenica, 3 per l'infrasettimanale
 # (in tal caso usare "epicoco" al posto di "rosini" e togliere "armellini")
 SOURCE_ORDER = ["rosini", "armellini", "curtaz", "lectio"]
+
 SOURCE_NAMES = {
     "rosini": "Rosini", "armellini": "Armellini", "curtaz": "Curtaz", "lectio": "Lectio unificata",
     "epicoco": "Epicoco",  # usare al posto di "rosini" negli infrasettimanali
 }
 SOURCE_LETTERS = {"rosini": "R", "armellini": "A", "curtaz": "C", "lectio": "L", "epicoco": "E"}
+
+# Colori per fonte: scelti con luminanza percepita ben distanziata (grigio equivalente
+# 50/105/160/210 su 255) cosi' restano distinguibili anche desaturati su e-ink.
+# Ciascuna coppia (bg, text) e' verificata per contrasto WCAG (>= 4.9:1).
+# Per l'infrasettimanale (3 fonti: epicoco/curtaz/lectio) riusare 3 di questi 4 step
+# di luminanza, mantenendo lo stesso criterio se si aggiungono colori nuovi.
+SOURCE_COLORS = {
+    "rosini":    {"bg": "#1A2E69", "text": "#F5F3EE"},
+    "armellini": {"bg": "#237846", "text": "#F5F3EE"},
+    "curtaz":    {"bg": "#DD8D5E", "text": "#1C1A17"},
+    "lectio":    {"bg": "#E6D09C", "text": "#1C1A17"},
+    "epicoco":   {"bg": "#7A2E4D", "text": "#F5F3EE"},  # bordeaux, luminanza ~ intermedia rosini/armellini
+}
 
 FOOTER_CREDITS = (
     "Fonti dei commenti: don Fabio Rosini (video) · P. Fernando Armellini (video) · "
@@ -149,22 +163,73 @@ THREADS = [
     {
         "title": "Filo A — Lo sguardo come chiave della fede",
         "path": [6, 8, 9],
-        "note": "«Sono io»: Dio presente anche nella prova → distogliere lo sguardo verso il vento fa affondare → fissarlo sul cammino già fatto, non sulla tempesta.",
+        "note": (
+            "«Coraggio, sono io» non è una rassicurazione che arriva a tempesta finita: è pronunciata "
+            "proprio dentro il vento contrario, ed è già di per sé la prova che Dio non abbandona la "
+            "barca nel momento peggiore. Ma il «sono io» da solo non basta a tenere Pietro a galla: "
+            "appena il suo sguardo si sposta da Gesù al vento, comincia ad affondare — non perché la "
+            "fede sia sparita, ma perché ha smesso, per un istante, di essere l'unico punto fermo. La "
+            "domanda finale, «perché hai dubitato?», non è un rimprovero ma un invito a guardare "
+            "indietro: quanta strada è già stata fatta fidandosi? Il filo che lega questi tre punti è "
+            "tutto qui: la fede non elimina il vento, ma decide dove va lo sguardo — e la memoria di "
+            "ciò che Dio ha già fatto è il modo concreto per tenerlo fisso."
+        ),
+        "saint_link": None,
     },
     {
         "title": "Filo B — Dalla forzatura al dono di sé",
         "path": [1, 3, 7, 9],
-        "note": "Gesù costringe alla traversata → la tempesta come prova necessaria di ogni cambiamento → lo slancio di Pietro sulla Parola → il dubbio come paura di donare tutta la vita.",
+        "note": (
+            "Tutto comincia con una costrizione: Gesù non lascia scelta ai discepoli, li obbliga alla "
+            "traversata. È una forzatura che assomiglia a molti passaggi della vita che non si "
+            "sceglierebbero mai da soli, e infatti subito arriva la tempesta — non come incidente, ma "
+            "come la forma quasi obbligata che ogni vero cambiamento prende. Dentro quella tempesta, "
+            "Pietro fa un passo che nessuno gli ha chiesto: scende dalla barca sulla sola parola di "
+            "Cristo. È lo slancio più alto del racconto, eppure proprio lì si rivela la sua vera paura "
+            "— non quella di annegare, ma quella di dover davvero donare tutta la vita, fino in fondo, "
+            "come gli viene chiesto. Il filo è un crescendo: dalla forzatura subita all'inizio, al dono "
+            "che si comincia a intuire e che ancora fa paura fino alla fine."
+        ),
+        "saint_link": {
+            "slug": "francesco", "emoji": "🕊️",
+            "phrase": "la chiamata che arriva nella rovina, il dono totale di sé",
+        },
     },
     {
         "title": "Filo C — La fragilità che comunque compie il sogno di Dio",
         "path": [2, 7, 10],
-        "note": "Gesù stesso sembra dubitare della scelta dei Dodici → Pietro, sbruffone e non ancora pronto → la Chiesa affidata a uomini fragili realizza comunque la missione.",
+        "note": (
+            "Anche Gesù, in questo racconto, sembra attraversare un momento di dubbio: sale sul monte "
+            "da solo dopo aver affidato la missione a dodici uomini che, alla prima vera prova, non "
+            "hanno capito quasi nulla. Pietro lo conferma pochi versetti dopo, con uno slancio generoso "
+            "ma acerbo, «un po' sbruffone», che lo fa affondare quasi subito. Eppure il racconto non si "
+            "chiude con un fallimento: si chiude con tutti, insieme, dentro la stessa barca, che "
+            "riconoscono chi hanno davanti. Il filo che attraversa questi tre momenti è una "
+            "consolazione precisa per chi guida una comunità: Dio non aspetta persone già pronte per "
+            "realizzare qualcosa di grande — sceglie di fare il fuoco con la legna fragile che ha, ed è "
+            "proprio così che il suo sogno si compie comunque."
+        ),
+        "saint_link": None,
     },
     {
         "title": "Filo D — Il mare, la Pasqua, la trasfigurazione della prova",
         "path": [3, 4, 10],
-        "note": "Il mare come segno di morte e caos → Cristo lo doma camminandovi sopra, segno messianico → la prova non viene tolta ma trasfigurata in gloria.",
+        "note": (
+            "Per la mentalità biblica il mare non è mai solo scenario: è la figura stessa del caos che "
+            "minaccia di inghiottire l'ordine della creazione, la stessa acqua del diluvio, delle acque "
+            "primordiali, del Mar Rosso. Che Cristo lo attraversi camminandoci sopra non è un prodigio "
+            "isolato: è un segno messianico preciso, leggibile solo da chi conosce quella grammatica "
+            "biblica — il dominio di Dio sul caos, reso visibile in un uomo. Il racconto si chiude non "
+            "con la tempesta rimossa come se non fosse mai accaduta, ma con una prova che lascia il "
+            "segno e insieme apre alla confessione più alta, «Davvero tu sei Figlio di Dio». Il filo è "
+            "pasquale in senso pieno: la prova non viene tolta, viene attraversata e trasfigurata — è "
+            "la stessa logica per cui, ancora oggi, ciò che resta di una difficoltà superata spesso "
+            "diventa il luogo più fecondo della fede."
+        ),
+        "saint_link": {
+            "slug": "bakhita", "emoji": "✝️",
+            "phrase": "la sofferenza riletta come luogo dove Dio si è fatto incontrare",
+        },
     },
 ]
 

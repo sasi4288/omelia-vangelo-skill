@@ -1,0 +1,198 @@
+---
+name: omelia-vangelo-4-fonti
+description: Genera il PDF del Vangelo del giorno (domenica o feriale/solennità) con glosse da fonti fisse — 4 per la domenica (Rosini, Armellini, Curtaz, Lectio unificata), 3 per l'infrasettimanale (Epicoco, Curtaz, Lectio unificata) — dimensionato per Viwoods AiPaper. Usare quando Salvatore chiede di preparare questo apparato per un'omelia, o per il rinnovo periodico del documento.
+---
+
+# Omelia — Vangelo con apparato a più fonti
+
+Genera un PDF di studio per la preparazione di un'omelia: il Vangelo del giorno con le
+glosse di più commentatori affiancate, organizzate per farne emergere il pensiero di
+ciascuno, i concetti ricorrenti tra le fonti, possibili fili logici di predicazione, un
+episodio di vita di uno o più santi collegato ai temi del brano, e approfondimenti
+teologici estesi — il tutto navigabile con link ipertestuali interni e dimensionato
+esattamente per lo schermo dell'e-reader Viwoods AiPaper di Salvatore.
+
+Il documento **non è un unico foglio**: è un fascicolo multi-pagina strutturato così,
+in quest'ordine:
+1. Una pagina (o più, se il contenuto non ci sta) per ciascuna fonte: il Vangelo intero
+   a sinistra (con le frasi commentate in **grassetto e link**), le glosse di quella sola
+   fonte a destra, in ordine, collegate da brevi connettori logici — leggibili in fila
+   come il ragionamento continuo di quell'autore
+2. Una pagina "Concetti ricorrenti": temi su cui più fonti convergono, punti di vista
+   affiancati
+3. Una pagina "Sintesi — fili logici": 3-4 percorsi che ricombinano gli ancoraggi tra le
+   fonti in possibili tracce di predicazione
+4. Una pagina per ciascun santo scelto, con un episodio di vita e il collegamento
+   esplicito al Vangelo (link a/da gli approfondimenti pertinenti)
+5. Una sezione finale "Approfondimenti": una voce per ciascun ancoraggio usato nel
+   documento, spiegazione biblico-teologica più estesa, con indice e link di ritorno sia
+   al Vangelo (per ciascuna fonte) sia ai santi collegati
+
+## Quando si attiva
+
+- **Domenica**: le fonti sono pronte con un margine di alcuni giorni (Rosini ~5gg prima,
+  Armellini anche 2-3 settimane prima, Curtaz-video ~3gg prima — quest'ultimo è il collo
+  di bottiglia). Il giovedì precedente è un buon momento per generare il documento della
+  domenica successiva.
+- **Feriale o solennità infrasettimanale** (es. Assunta): Curtaz (sito) ed Epicoco
+  pubblicano il commento solo ~1 giorno prima — **non generare con largo anticipo**, va
+  fatto a ridosso della data (sera prima o mattina stessa). cristomaestro.it invece non
+  ha questo vincolo (vedi sotto).
+- Se una fonte non è ancora disponibile quando si prova a generare, segnalarlo a
+  Salvatore invece di procedere con un apparato incompleto senza avvisare.
+
+## Le fonti e come recuperarle
+
+**Domenica (4 fonti):**
+| Fonte | Come recuperarla |
+|---|---|
+| don Fabio Rosini | Video YouTube (cercare "don Fabio Rosini commento vangelo" + data, canale "Alzo gli Occhi verso il Cielo" o simili) |
+| P. Fernando Armellini | Video YouTube (cercare "Armellini commento al vangelo" + data) |
+| Paolo Curtaz | Video YouTube (cercare "Paolo Curtaz commento al vangelo" + data) |
+| Lectio unificata | cristomaestro.it, vedi sotto |
+
+**Infrasettimanale (3 fonti):**
+| Fonte | Come recuperarla |
+|---|---|
+| don Luigi Maria Epicoco | https://www.cercoiltuovolto.it/tag/don-luigi-maria-epicoco/ |
+| Paolo Curtaz | https://paolocurtaz.it/commenti/vangelo-del-giorno/ (NON il video, il sito) |
+| Lectio unificata | cristomaestro.it, vedi sotto |
+
+**cristomaestro.it — note tecniche importanti:**
+- Va letto via **HTTP**, non HTTPS: la porta 443 del sito va sistematicamente in
+  timeout dall'ambiente di lavoro (sia con WebFetch che con curl diretto), la porta 80
+  invece funziona sempre. Scaricare i PDF con `curl http://www.cristomaestro.it/...`
+  (non `https://`).
+- Le pagine di navigazione interattiva (`/rito-romano/AAAA-MM-GG`, `/calendario-liturgico`)
+  sembrano funzionare solo per la domenica "corrente" — non affidarsi a queste per
+  trovare il file.
+- L'**archivio PDF vero e proprio è statico e sempre disponibile**, organizzato per nome
+  non per data:
+  - Domeniche: `files/Esegesi/Domeniche rito Romano/Anno {A|B|C}/[Nome Domenica].pdf`
+  - Feste/solennità: `files/Esegesi/Feste e solennita romano/[data] - [Nome Festa]...pdf`
+  - Bisogna indovinare/verificare il nome esatto del file (spazi, virgole, "Anno X"):
+    provare prima a dedurlo dal pattern, poi verificare con una richiesta HTTP diretta.
+
+**Estrazione dai video YouTube:**
+1. `yt-dlp` è installato; usare `--extractor-args "youtube:player_client=android"` per
+   evitare i blocchi PO-token.
+2. Scaricare i sottotitoli italiani (spesso solo automatici):
+   `yt-dlp --skip-download --write-auto-sub --sub-lang it --sub-format vtt --extractor-args "youtube:player_client=android" -o "nome" "URL"`
+3. Se un video non ha sottotitoli disponibili, cercare un altro canale/video che tratti
+   lo stesso commento dello stesso autore per lo stesso giorno (è già capitato) prima di
+   ricorrere alla trascrizione con Whisper (installabile via `pip3 install openai-whisper`,
+   lento: preferire sempre i sottotitoli se esistono).
+4. **Pulire il VTT** (i sottotitoli automatici sono "a scorrimento", ogni blocco ripete
+   parte del precedente): script di deduplica per prefisso comune riga per riga —
+   vedere lo storico di questa conversazione per l'algoritmo esatto, oppure
+   ricostruirlo: per ogni blocco di testo, trovare il prefisso di parole in comune col
+   blocco precedente e aggiungere solo le parole nuove.
+
+## Il santo — indice riusabile, non ripartire da zero
+
+**Consultare sempre per primo** `03_Formazione_e_Studio/Indice_Santi_per_Tema.md`: è un
+indice di episodi di santi già ricercati e verificati, taggato per tema. Se un tema
+del Vangelo del giorno corrisponde a un tag già presente, riusare quell'episodio.
+Altrimenti:
+1. Prima fonte da controllare: `05_Libri/Santi e Testimonianze/Catechesi sugli Apostoli,
+   i Padri della Chiesa, gli Scrittori e i Santi (Benedetto XVI).pdf` — 661 pagine,
+   leggibile direttamente, copre Apostoli/Padri della Chiesa/santi fino a inizio '900.
+   Cercare con `pdftotext -layout file.pdf - | grep -i "nome"` invece di rileggere tutto.
+2. causesanti.va (raggiungibile via HTTPS normale) per verificare date/dati ufficiali —
+   le sue schede biografiche sono spesso troppo sintetiche come fonte narrativa primaria.
+3. Ricerca web incrociata su più fonti indipendenti per i dettagli d'episodio.
+
+**Dopo aver usato un episodio nuovo, aggiungere sempre la voce all'indice** (stesso
+formato delle voci esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in),
+così la prossima volta non si riparte da zero.
+
+## Procedimento
+
+1. **Determinare il giorno liturgico target** (di norma la prossima domenica; oppure la
+   data specifica richiesta) e se è domenica o feriale/solennità — questo determina
+   quale set di fonti usare.
+2. **Recuperare il Vangelo del giorno** (testo CEI) e le 3-4 fonti come sopra.
+3. **Segmentare il Vangelo** in `GOSPEL_SEGMENTS` (vedi `templates/build_apparato_template.py`):
+   ogni voce è `(testo_prima, frase_ancorata, testo_dopo, numero_ancora, marcatore_scrittura_o_None)`.
+   La `frase_ancorata` è quella che verrà messa in grassetto e collegata: sceglierla in
+   corrispondenza dei punti su cui almeno una fonte fa un'osservazione specifica.
+4. **Costruire `ANCHORS`**: un blocco per ogni numero di ancora, con la lista delle fonti
+   che commentano quel punto — `(slug, lettera, nome, tesi_breve, corpo)`. Non tutte le
+   fonti devono comparire su ogni ancoraggio: solo quelle che dicono davvero qualcosa di
+   specifico su quel punto (è normale avere 2-4 fonti per ancoraggio, mai forzare).
+5. **Scrivere i connettori** (`CONNECTORS` in `build_document_template.py`): per ogni
+   fonte, una frase brevissima che lega la glossa precedente alla successiva, in modo che
+   leggendo in fila le glosse di un solo autore si ricostruisca il suo ragionamento.
+6. **Identificare i concetti ricorrenti** (`CONCEPTS`): 3-5 temi su cui almeno 3 fonti
+   convergono, con il punto di vista di ciascuna.
+7. **Costruire i fili logici** (`THREADS`): 3-4 percorsi che attraversano ancoraggi
+   diversi, mescolando le fonti, con un titolo e una frase di sintesi ciascuno — sono
+   proposte di traccia per l'omelia, non l'omelia già scritta.
+8. **Scegliere il/i santo/i** (`SAINTS`) — vedi sezione sopra — e collegarli agli
+   ancoraggi pertinenti tramite `link_phrases` (frasi nel testo "connection" da
+   trasformare in link) e aggiungere `"vedi_anche"` nell'approfondimento corrispondente.
+9. **Scrivere gli approfondimenti** (`APPROFONDIMENTI`): uno per ogni numero di ancora,
+   150-220 parole, contesto biblico/teologico più esteso di quanto stia nelle glosse
+   brevi — etimologie, sfondo storico-religioso, rimandi scritturistici ulteriori. Attingere
+   al materiale già raccolto dalle fonti più conoscenza teologica generale (verificata),
+   cercando altrove solo se manca qualcosa di specifico.
+10. **Aggiornare i metadati** in testa a `build_document_template.py`: `GOSPEL_REF`,
+    `LITURGICAL_LABEL`, `DOC_TITLE`, `SOURCE_ORDER`, `FOOTER_CREDITS`.
+11. **Copiare i tre file** (`build_apparato_template.py` → `build_apparato.py`,
+    `build_document_template.py` → `build_document.py`, `render_document.py` invariato)
+    in una cartella di lavoro, con i dati di questa settimana.
+12. **Generare**: `python3 render_document.py` produce l'HTML, poi
+    `"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="output.pdf" --print-to-pdf-no-header "file://$(pwd)/vangelo_documento_finale.html"`.
+13. **Verificare prima di consegnare**:
+    - Numero di pagine ragionevole (nessuna pagina anomala: controllare le dimensioni dei
+      PNG resi con `pdftoppm -png -r 130` — una pagina sospettosamente piccola in byte è
+      quasi sempre una pagina vuota/rotta)
+    - Nessun margine mancante sulle pagine di continuazione
+    - Link interni funzionanti: `python3 -c "import pypdf; r=pypdf.PdfReader('output.pdf'); print(sum(1 for p in r.pages for a in (p.get('/Annots') or []) if a.get_object().get('/Subtype')=='/Link'))"`
+      deve dare un numero sostanzialmente maggiore di zero (per il caso a 4 fonti/10
+      ancoraggi il numero di riferimento era 194)
+    - Ispezionare visivamente almeno la prima pagina di ogni sezione con il tool Read
+14. **Salvare** in `01_Parrocchia_e_Ministero/Omelie/` con nome
+    `Vangelo_[riferimento breve]_[Nome Domenica o Festa]_AiPaper.pdf`.
+15. **Aprire per la revisione** con
+    `"/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" "percorso/file.pdf"`
+    (l'estensione `tomoki1207.pdf` gestisce l'anteprima) — il link cliccabile in chat da
+    solo NON apre l'anteprima corretta, va sempre usato questo comando.
+
+## Specifiche tecniche fisse (non richiedono conferma ogni volta)
+
+- **Pagina**: 162.56 × 216.75 mm (Viwoods AiPaper 10.65", 1920×2560px @300ppi),
+  `@page { size: 162.56mm 216.75mm; margin: 0; }`, padding interno 15mm sopra/sotto,
+  9.5mm ai lati.
+- **Stile**: scala di grigi (l'utente legge su e-reader) — MAI usare sfumature di grigio
+  diverse per distinguere le fonti (troppo sottili, spariscono su e-ink). Le fonti si
+  distinguono con un bollino a iniziale (R/A/C/L/E) + stile del bordo (continuo /
+  tratteggiato / punteggiato / doppio) come doppia codifica.
+- **Tipografia**: una sola scala per tutto il documento (variabili CSS `--fs-h1`,
+  `--fs-h2`, `--fs-thesis`, `--fs-body`, `--fs-caption`) — non introdurre dimensioni
+  diverse per le stesse categorie di testo in punti diversi del documento.
+- **Paginazione**: mai affidarsi solo all'overflow automatico del browser per contenuti
+  lunghi (perde il padding superiore sulla pagina di continuazione e può generare pagine
+  vuote) — per le pagine-autore si usa un calcolo esplicito di quante righe entrano per
+  pagina (`paginate_rows` in `render_document.py`); per le altre sezioni più corte basta
+  `box-decoration-break: clone` + `break-inside: avoid` sui blocchi.
+
+## File del progetto
+
+- `templates/build_apparato_template.py` — struttura dati del Vangelo segmentato e degli
+  ancoraggi (da rigenerare ogni volta)
+- `templates/build_document_template.py` — metadati, connettori, concetti, fili logici,
+  santi, approfondimenti (da rigenerare ogni volta)
+- `templates/render_document.py` — motore di rendering/CSS/paginazione, generico, non
+  richiede modifiche da una settimana all'altra
+- `../../.claude/../03_Formazione_e_Studio/Indice_Santi_per_Tema.md` (relativo alla
+  radice del workspace) — indice riusabile degli episodi di santi
+
+## Cosa chiedere a Salvatore (se non specificato)
+
+- Per quale domenica/giorno generare (default: la prossima domenica)
+- Se per un giorno feriale/solennità, conferma che le fonti infrasettimanali abbiano già
+  pubblicato il contenuto (altrimenti avvisare che è troppo presto, non generare un
+  apparato incompleto)
+- Se un santo scelto non è ovvio dal tema del Vangelo, proporre 2-3 candidati invece di
+  sceglierne uno arbitrariamente

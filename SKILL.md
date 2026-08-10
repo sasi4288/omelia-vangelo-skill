@@ -59,10 +59,12 @@ in quest'ordine:
 | Lectio unificata | cristomaestro.it, vedi sotto |
 
 **cristomaestro.it — note tecniche importanti:**
-- Va letto via **HTTP**, non HTTPS: la porta 443 del sito va sistematicamente in
-  timeout dall'ambiente di lavoro (sia con WebFetch che con curl diretto), la porta 80
-  invece funziona sempre. Scaricare i PDF con `curl http://www.cristomaestro.it/...`
-  (non `https://`).
+- Provare prima **HTTPS**: in ambiente cloud (routine) risponde normalmente in 1-2
+  secondi, nessun timeout osservato. Solo se HTTPS va sistematicamente in timeout
+  (capitato in alcuni ambienti di lavoro locali, sia con WebFetch che con curl diretto)
+  ripiegare su **HTTP** (`curl http://www.cristomaestro.it/...`), che finora ha sempre
+  funzionato come fallback. Non escludere un metodo a priori: provare quello più veloce
+  e passare all'altro solo se necessario.
 - Le pagine di navigazione interattiva (`/rito-romano/AAAA-MM-GG`, `/calendario-liturgico`)
   sembrano funzionare solo per la domenica "corrente" — non affidarsi a queste per
   trovare il file.
@@ -70,8 +72,15 @@ in quest'ordine:
   non per data:
   - Domeniche: `files/Esegesi/Domeniche rito Romano/Anno {A|B|C}/[Nome Domenica].pdf`
   - Feste/solennità: `files/Esegesi/Feste e solennita romano/[data] - [Nome Festa]...pdf`
+    (es. confermato: `10 agosto - San Lorenzo.pdf`)
   - Bisogna indovinare/verificare il nome esatto del file (spazi, virgole, "Anno X"):
     provare prima a dedurlo dal pattern, poi verificare con una richiesta HTTP diretta.
+  - **L'archivio copre SOLO Domeniche e Feste/Solennità.** Per le memorie feriali
+    (es. Santa Chiara, 11 agosto) e le ferie semplici **non esiste alcun file** — non è
+    un errore né un problema temporaneo, è strutturale. Per questi giorni la Lectio
+    unificata va considerata una fonte assente per definizione, non una fonte "non
+    ancora pubblicata": non bloccare/segnalare la sua assenza in questi casi, procedere
+    con le fonti infrasettimanali disponibili (vedi condizione di stop più sotto).
 
 **Estrazione dai video YouTube:**
 1. `yt-dlp` è installato; usare `--extractor-args "youtube:player_client=android"` per
@@ -90,21 +99,35 @@ in quest'ordine:
 
 ## Il santo — indice riusabile, non ripartire da zero
 
-**Consultare sempre per primo** `03_Formazione_e_Studio/Indice_Santi_per_Tema.md`: è un
-indice di episodi di santi già ricercati e verificati, taggato per tema. Se un tema
-del Vangelo del giorno corrisponde a un tag già presente, riusare quell'episodio.
-Altrimenti:
-1. Prima fonte da controllare: `05_Libri/Santi e Testimonianze/Catechesi sugli Apostoli,
-   i Padri della Chiesa, gli Scrittori e i Santi (Benedetto XVI).pdf` — 661 pagine,
-   leggibile direttamente, copre Apostoli/Padri della Chiesa/santi fino a inizio '900.
-   Cercare con `pdftotext -layout file.pdf - | grep -i "nome"` invece di rileggere tutto.
+**Consultare sempre per primo `Indice_Santi_per_Tema.md` in questo stesso repository**
+(copia sincronizzata di `03_Formazione_e_Studio/Indice_Santi_per_Tema.md` sul workspace
+locale dell'utente — quella locale è la fonte "madre", questa nel repo è quella
+raggiungibile anche dagli agenti cloud, che non hanno alcun accesso al Mac dell'utente).
+È un indice di episodi di santi già ricercati e verificati, taggato per tema. Se un
+tema del Vangelo del giorno corrisponde a un tag già presente, riusare quell'episodio.
+
+**Regola non negoziabile, in questo file e in quello sincronizzato:** il campo
+"Episodio" di ogni voce contiene SEMPRE il racconto per intero in prosa, mai un rimando
+a un libro/file esterno — un agente cloud non può aprire `05_Libri/...` sul Mac
+dell'utente, quindi un rimando lì per lui equivale a non avere nulla.
+
+Se nessun tema corrisponde, cercare una fonte nuova, in quest'ordine:
+1. `05_Libri/Santi e Testimonianze/Catechesi sugli Apostoli, i Padri della Chiesa, gli
+   Scrittori e i Santi (Benedetto XVI).pdf` — 661 pagine, leggibile direttamente, copre
+   Apostoli/Padri della Chiesa/santi fino a inizio '900. Solo se si lavora in locale con
+   accesso al workspace: un agente cloud non ha questo file, salta direttamente al
+   punto 2. Cercare con `pdftotext -layout file.pdf - | grep -i "nome"` invece di
+   rileggere tutto.
 2. causesanti.va (raggiungibile via HTTPS normale) per verificare date/dati ufficiali —
    le sue schede biografiche sono spesso troppo sintetiche come fonte narrativa primaria.
 3. Ricerca web incrociata su più fonti indipendenti per i dettagli d'episodio.
 
-**Dopo aver usato un episodio nuovo, aggiungere sempre la voce all'indice** (stesso
-formato delle voci esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in),
-così la prossima volta non si riparte da zero.
+**Dopo aver trovato un episodio nuovo, scrivere la voce per intero (racconto completo,
+non un rimando) in ENTRAMBE le copie** se si sta lavorando in locale con accesso a
+tutto il workspace; un agente cloud aggiorna solo la copia nel repository (e la fa
+confluire nel repo con un commit), lasciando che l'utente o una sessione locale
+successiva la riporti anche nella copia "madre" sul Mac. Stesso formato delle voci
+esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in.
 
 ## Procedimento
 
@@ -196,3 +219,19 @@ così la prossima volta non si riparte da zero.
   apparato incompleto)
 - Se un santo scelto non è ovvio dal tema del Vangelo, proporre 2-3 candidati invece di
   sceglierne uno arbitrariamente
+
+## Condizione di stop (quando fermarsi e avvisare invece di generare)
+
+Non generare mai un apparato con fonti mancanti senza avvisare — ma cosa conta come
+"mancante" dipende dal rango liturgico del giorno:
+
+- **Domenica, festa o solennità**: fermarsi e avvisare se manca la Lectio unificata
+  OPPURE se mancano entrambe le altre fonti previste (per la domenica: Rosini+Armellini,
+  Curtaz, o combinazioni — vedi sopra; per festa/solennità infrasettimanale: Epicoco e
+  Curtaz). Per questi giorni la Lectio esiste sempre nell'archivio, quindi la sua
+  assenza segnala quasi certamente che non è ancora stata pubblicata (non un limite
+  strutturale) ed è corretto trattarla come blocco.
+- **Memoria feriale o feria semplice**: la Lectio unificata è strutturalmente assente
+  dall'archivio (vedi sopra) — la sua mancanza NON è una condizione di stop. Fermarsi e
+  avvisare solo se mancano ENTRAMBE Epicoco e Curtaz. Se è disponibile anche solo una
+  delle due, procedere con quella (più la Lectio se per caso esistesse).

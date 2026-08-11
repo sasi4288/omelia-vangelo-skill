@@ -1,6 +1,6 @@
 ---
 name: omelia-vangelo-4-fonti
-description: Genera il PDF del Vangelo del giorno (domenica o feriale/solennità) con glosse da fonti fisse — 4 per la domenica (Rosini, Armellini, Curtaz, Lectio unificata), 3 per l'infrasettimanale (Epicoco, Curtaz, Lectio unificata) — dimensionato per Viwoods AiPaper. Usare quando Salvatore chiede di preparare questo apparato per un'omelia, o per il rinnovo periodico del documento.
+description: Genera il PDF del Vangelo del giorno (domenica o feriale/solennità) con glosse da fonti fisse — 5 per la domenica (Rosini, Armellini, Curtaz, Epicoco, Lectio unificata), 3 per l'infrasettimanale (Epicoco, Curtaz, Lectio unificata) — dimensionato per Viwoods AiPaper. Usare quando Salvatore chiede di preparare questo apparato per un'omelia, o per il rinnovo periodico del documento.
 ---
 
 # Omelia — Vangelo con apparato a più fonti
@@ -43,13 +43,16 @@ in quest'ordine:
 
 ## Le fonti e come recuperarle
 
-**Domenica (4 fonti):**
+**Domenica (5 fonti):**
 | Fonte | Come recuperarla |
 |---|---|
 | don Fabio Rosini | Video YouTube (cercare "don Fabio Rosini commento vangelo" + data, canale "Alzo gli Occhi verso il Cielo" o simili) |
 | P. Fernando Armellini | Video YouTube (cercare "Armellini commento al vangelo" + data) |
 | Paolo Curtaz | Video YouTube (cercare "Paolo Curtaz commento al vangelo" + data) |
+| don Luigi Maria Epicoco | https://www.cercoiltuovolto.it/tag/don-luigi-maria-epicoco/ (sito, stesso URL dell'infrasettimanale — pubblica anche per la domenica) |
 | Lectio unificata | cristomaestro.it, vedi sotto |
+
+**Nota sui tempi di pubblicazione di Epicoco:** a differenza di Rosini/Armellini (che escono con giorni di anticipo), Epicoco pubblica a ridosso della data — anche per la domenica può non essere ancora online se si genera il documento il giovedì precedente. Non è un errore: trattarlo come le altre fonti video, provare a recuperarlo e procedere comunque se manca, senza che la sua assenza da sola blocchi la generazione (vedi soglia sotto).
 
 **Infrasettimanale (3 fonti):**
 | Fonte | Come recuperarla |
@@ -81,6 +84,14 @@ in quest'ordine:
     unificata va considerata una fonte assente per definizione, non una fonte "non
     ancora pubblicata": non bloccare/segnalare la sua assenza in questi casi, procedere
     con le fonti infrasettimanali disponibili (vedi condizione di stop più sotto).
+
+**Paolo Curtaz (sito, paolocurtaz.it) — limite noto:** il sito è protetto da un captcha
+SiteGround che blocca sistematicamente l'IP dell'ambiente cloud (confermato su più run:
+fetch diretto, WebFetch, feed RSS, reader proxy e Wayback Machine tutti bloccati — solo
+la homepage in cache passa a volte). Non è un problema di rete generale né va aggirato
+(niente tentativi di bypass di captcha/WAF). Trattarlo come fonte irraggiungibile per
+quel run: un paio di tentativi standard (fetch diretto + WebFetch) sono sufficienti,
+poi procedere senza, contandola come fonte mancante ai fini della condizione di stop.
 
 **Estrazione dai video YouTube:**
 1. `yt-dlp` è installato; usare `--extractor-args "youtube:player_client=android"` per
@@ -134,7 +145,7 @@ esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in.
 1. **Determinare il giorno liturgico target** (di norma la prossima domenica; oppure la
    data specifica richiesta) e se è domenica o feriale/solennità — questo determina
    quale set di fonti usare.
-2. **Recuperare il Vangelo del giorno** (testo CEI) e le 3-4 fonti come sopra.
+2. **Recuperare il Vangelo del giorno** (testo CEI) e le 3-5 fonti come sopra.
 3. **Segmentare il Vangelo** in `GOSPEL_SEGMENTS` (vedi `templates/build_apparato_template.py`):
    ogni voce è `(testo_prima, frase_ancorata, testo_dopo, numero_ancora, marcatore_scrittura_o_None)`.
    La `frase_ancorata` è quella che verrà messa in grassetto e collegata: sceglierla in

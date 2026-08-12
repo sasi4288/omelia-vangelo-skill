@@ -195,20 +195,22 @@ esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in.
 
 ## Consegna e archiviazione (run automatici in cloud)
 
-Le routine cloud (non l'uso locale) consegnano e archiviano così:
-- **Canale principale, sempre**: invio del PDF via Telegram Bot API — è l'unico canale
-  verificato affidabile, va sempre tentato per primo e considerato il risultato
-  principale del run anche se l'archiviazione sotto fallisce.
-- **Archiviazione di backup**: commit + push del PDF in `output/` sul repository GitHub
-  della skill, autenticato con un token (`GITHUB_TOKEN`, secret dell'ambiente cloud,
-  scope Contents:write solo su questo repo) iniettato via
-  `git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/sasi4288/omelia-vangelo-skill.git`
-  prima del push. Se la variabile `GITHUB_TOKEN` non è impostata, il push tornerà a
-  fallire con 403 come nei run precedenti: segnalarlo chiaramente invece di insistere.
+Le routine cloud (non l'uso locale) consegnano così:
+- **Unico canale, sempre**: invio del PDF via Telegram Bot API — è il solo canale
+  verificato affidabile e va sempre tentato. È anche l'unico archivio di fatto (il PDF
+  resta scaricabile dalla chat).
 - **Google Drive: abbandonato.** Il connettore MCP disponibile richiede il contenuto
-  inline in base64 e l'interfaccia ha un tetto di ~256KB — i PDF di questo documento
-  (tipicamente 180-250KB già compressi) lo superano quasi sempre. Non tentare più
-  l'upload su Drive nei run cloud.
+  inline in base64 con un tetto di ~256KB — i PDF di questo documento (tipicamente
+  180-250KB già compressi) lo superano quasi sempre. Non tentare l'upload su Drive.
+- **GitHub push: abbandonato (per ora).** Anche con un Personal Access Token valido
+  (verificato con permesso di scrittura reale via chiamata diretta all'API GitHub), il
+  push da un ambiente cloud Claude Code fallisce con 403: il proxy dell'ambiente
+  gestisce/sovrascrive l'autenticazione verso github.com e richiede che un admin
+  colleghi la "Claude GitHub App" a livello di organizzazione — un meccanismo separato
+  dai permessi del token, per cui non abbiamo trovato un percorso self-service. Non
+  tentare più il push nei run cloud finché questo non viene sbloccato lato Anthropic/
+  account. Se in futuro si vuole riprovare, verificare prima se è comparsa una gestione
+  esplicita della GitHub App per le routine in claude.ai/code.
 
 ## Specifiche tecniche fisse (non richiedono conferma ogni volta)
 

@@ -193,6 +193,23 @@ esistenti: Temi, Episodio, Collegamento possibile, Fonte, Usato in.
     (l'estensione `tomoki1207.pdf` gestisce l'anteprima) — il link cliccabile in chat da
     solo NON apre l'anteprima corretta, va sempre usato questo comando.
 
+## Consegna e archiviazione (run automatici in cloud)
+
+Le routine cloud (non l'uso locale) consegnano e archiviano così:
+- **Canale principale, sempre**: invio del PDF via Telegram Bot API — è l'unico canale
+  verificato affidabile, va sempre tentato per primo e considerato il risultato
+  principale del run anche se l'archiviazione sotto fallisce.
+- **Archiviazione di backup**: commit + push del PDF in `output/` sul repository GitHub
+  della skill, autenticato con un token (`GITHUB_TOKEN`, secret dell'ambiente cloud,
+  scope Contents:write solo su questo repo) iniettato via
+  `git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/sasi4288/omelia-vangelo-skill.git`
+  prima del push. Se la variabile `GITHUB_TOKEN` non è impostata, il push tornerà a
+  fallire con 403 come nei run precedenti: segnalarlo chiaramente invece di insistere.
+- **Google Drive: abbandonato.** Il connettore MCP disponibile richiede il contenuto
+  inline in base64 e l'interfaccia ha un tetto di ~256KB — i PDF di questo documento
+  (tipicamente 180-250KB già compressi) lo superano quasi sempre. Non tentare più
+  l'upload su Drive nei run cloud.
+
 ## Specifiche tecniche fisse (non richiedono conferma ogni volta)
 
 - **Pagina**: 162.56 × 216.75 mm (Viwoods AiPaper 10.65", 1920×2560px @300ppi),

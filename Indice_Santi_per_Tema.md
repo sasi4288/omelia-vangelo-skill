@@ -93,7 +93,38 @@ e i Santi* (2006-2010) — catechesi del mercoledì 27 gennaio 2010, "San France
 d'Assisi" (testo integrale disponibile in `05_Libri/Santi e Testimonianze/`, leggibile
 direttamente dal PDF).
 
-**Usato in:** XIX Domenica T.O., anno A — 9 agosto 2026 (Mt 14,22-33, Pietro sulle acque)
+**Usato in:** XIX Domenica T.O., anno A — 9 agosto 2026 (Mt 14,22-33, Pietro sulle acque);
+Giovedì XIX T.O., Anno II — 13 agosto 2026 (Mt 18,21-19,1, il perdono senza misura)
+
+---
+
+## Santi Ponziano e Ippolito († 235, Sardegna)
+
+**Temi:** perdono, riconciliazione tra avversari, scisma sanato, deporre la propria ragione, unità della Chiesa, martirio
+
+**Episodio:** Ponziano fu vescovo di Roma dal 230 al 235. Ippolito era un dotto e severo
+presbitero romano, rigorista: aveva contestato i papi ritenuti troppo indulgenti — Callisto I
+anzitutto — fino a farsi eleggere vescovo da una fazione, tanto che la tradizione lo ricorda
+come il primo antipapa, autore di uno scisma che divise per anni la Chiesa di Roma. Nel 235,
+sotto la persecuzione dell'imperatore Massimino il Trace, i due avversari furono deportati
+insieme nelle miniere della Sardegna, l'«insula nociva». Per non lasciare la comunità senza
+guida, il 28 settembre 235 Ponziano rinunciò al pontificato — la prima abdicazione papale
+storicamente attestata — così che si potesse eleggere un nuovo vescovo. Proprio là, nell'estrema
+prova condivisa, Ippolito si riconciliò con la Chiesa e pose fine allo scisma che aveva causato.
+Entrambi morirono per i maltrattamenti subiti e sono venerati insieme come martiri. Anni dopo
+papa Fabiano fece traslare a Roma le loro spoglie: la Depositio martyrum del 336 ne ricorda al
+13 agosto la comune sepoltura.
+
+**Collegamento possibile:** un papa e il suo rivale che, nella stessa miniera, smettono di
+contare i torti e tornano fratelli — l'icona storica di «Non dovevi anche tu aver pietà del tuo
+compagno?» (Mt 18,33) e del perdonare «di cuore». Ponziano lascia andare ufficio e ragione come
+il re condona il debito; Ippolito, che aveva preteso di avere ragione fino allo scisma, si
+riconcilia prima della fine.
+
+**Fonte:** Martirologio Romano, 13 agosto; Depositio martyrum (336); liturgia.silvestrini.org
+e Vatican News (santo del giorno), concordanti sui dati storici.
+
+**Usato in:** Giovedì XIX T.O., Anno II — 13 agosto 2026 (Mt 18,21-19,1, il perdono senza misura)
 
 ---
 

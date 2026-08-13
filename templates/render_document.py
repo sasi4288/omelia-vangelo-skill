@@ -377,7 +377,7 @@ def render_approfondimenti_section():
     parts = ['<div class="page">']
     parts.append('<p class="eyebrow">Per capire meglio</p>')
     parts.append('<h1 id="indice-approfondimenti">Approfondimenti</h1>')
-    parts.append('<p class="sub">Uno per ciascuno dei dieci ancoraggi usati in tutto il documento: contesto biblico e teologico più esteso, per chi vuole andare oltre la sintesi.</p>')
+    parts.append(f'<p class="sub">Uno per ciascuno dei {len(ANCHOR_ORDER)} ancoraggi usati in tutto il documento: contesto biblico e teologico più esteso, per chi vuole andare oltre la sintesi.</p>')
     parts.append('<hr class="rule">')
     parts.append('<div class="approf-index">')
     for num in ANCHOR_ORDER:

@@ -61,6 +61,11 @@ in quest'ordine:
 | Paolo Curtaz | https://paolocurtaz.it/commenti/vangelo-del-giorno/ (NON il video, il sito) |
 | Lectio unificata | cristomaestro.it, vedi sotto |
 
+**cristomaestro.it — autore:** don Vincenzo Cuffaro — esorcista dell'arcidiocesi di
+Agrigento, docente di Scienze Bibliche alla Facoltà Teologica di Palermo ("San Giovanni
+Evangelista"), rettore della chiesa di Cristo Sommo ed Eterno Sacerdote a Porto Empedocle.
+Citarlo per nome nei crediti/fonte quando si usa questo materiale.
+
 **cristomaestro.it — note tecniche importanti:**
 - Provare prima **HTTPS**: in ambiente cloud (routine) risponde normalmente in 1-2
   secondi, nessun timeout osservato. Solo se HTTPS va sistematicamente in timeout
@@ -78,12 +83,30 @@ in quest'ordine:
     (es. confermato: `10 agosto - San Lorenzo.pdf`)
   - Bisogna indovinare/verificare il nome esatto del file (spazi, virgole, "Anno X"):
     provare prima a dedurlo dal pattern, poi verificare con una richiesta HTTP diretta.
-  - **L'archivio copre SOLO Domeniche e Feste/Solennità.** Per le memorie feriali
-    (es. Santa Chiara, 11 agosto) e le ferie semplici **non esiste alcun file** — non è
-    un errore né un problema temporaneo, è strutturale. Per questi giorni la Lectio
-    unificata va considerata una fonte assente per definizione, non una fonte "non
-    ancora pubblicata": non bloccare/segnalare la sua assenza in questi casi, procedere
-    con le fonti infrasettimanali disponibili (vedi condizione di stop più sotto).
+  - **CORREZIONE (scoperta il 13/8, prima si credeva assente):** per le memorie feriali
+    e le ferie semplici il commento di don Cuffaro ESISTE, ma vive in un percorso e con
+    una logica di nome diversi, organizzati per giorno-della-settimana-liturgica invece
+    che per data specifica:
+    - Vangelo: `files/Esegesi/Omelie Feriali Romano/Vangeli/[GIORNO SETTIMANA] [N]
+      SETTIMANA T.O..pdf` — es. confermato:
+      `MERCOLEDI XIX SETTIMANA TO.pdf` (giorno e numero settimana in maiuscolo, niente
+      accenti/apostrofi, "TO" senza punti in questo file).
+    - Prima lettura: `files/Esegesi/Omelie Feriali Romano/Anno {Pari|Dispari}/[Giorno]
+      [N] T.O. anno {pari|dispari}.pdf` — es. confermato:
+      `Mercoledi XIX T.O. anno pari.pdf`. L'anno pari/dispari è quello del **ciclo
+      feriale a due anni** (I/II), determinato dalla parità dell'anno solare corrente
+      — 2026 è pari → "Anno Pari". Non confondere con il ciclo domenicale A/B/C.
+    - Entrambi i file contengono un **vero commento esegetico esteso** (non il solo
+      testo biblico), stesso registro della Lectio domenicale, stesso autore.
+    - Il nome esatto va comunque dedotto/verificato come per gli altri file di
+      quest'archivio (variazioni di spazi/maiuscole tra festività): provare il pattern,
+      verificare con una richiesta diretta.
+  - **Quando manca anche questo** (nome file non indovinato, oppure il giorno è un
+    caso limite come un'ottava o un tempo liturgico raro non ancora mappato): a quel
+    punto sì, trattarla come fonte assente per quel run — ma è un fallback raro, non
+    la norma. Non bloccare/segnalare la sua assenza isolata (vedi condizione di stop
+    più sotto), ma **prima di rinunciare, provare sempre questo percorso** invece di
+    dare per scontato che non esista.
 
 **Paolo Curtaz (sito, paolocurtaz.it) — limite noto:** il sito è protetto da un captcha
 SiteGround che blocca sistematicamente l'IP dell'ambiente cloud (confermato su più run:
@@ -261,7 +284,11 @@ Non generare mai un apparato con fonti mancanti senza avvisare — ma cosa conta
   Curtaz). Per questi giorni la Lectio esiste sempre nell'archivio, quindi la sua
   assenza segnala quasi certamente che non è ancora stata pubblicata (non un limite
   strutturale) ed è corretto trattarla come blocco.
-- **Memoria feriale o feria semplice**: la Lectio unificata è strutturalmente assente
-  dall'archivio (vedi sopra) — la sua mancanza NON è una condizione di stop. Fermarsi e
-  avvisare solo se mancano ENTRAMBE Epicoco e Curtaz. Se è disponibile anche solo una
-  delle due, procedere con quella (più la Lectio se per caso esistesse).
+- **Memoria feriale o feria semplice**: PRIMA provare a recuperare la Lectio feriale di
+  don Cuffaro dal percorso "Omelie Feriali Romano" (vedi sopra — di norma ESISTE, non è
+  più da considerare assente per default). Fermarsi e avvisare solo se mancano ENTRAMBE
+  Epicoco e Curtaz — la Lectio feriale, quando disponibile, è una fonte in più che
+  arricchisce il documento ma non è mai da sola condizione di stop (né la sua presenza
+  né la sua assenza cambiano se generare o no: quella decisione dipende solo da
+  Epicoco/Curtaz). Se il nome del file feriale non si trova dopo un tentativo
+  ragionevole, procedere comunque con le fonti disponibili senza bloccarsi per questo.

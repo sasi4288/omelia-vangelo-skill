@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.salvatoremonte.omelie-sync</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/salvatoremonte/Desktop/claude Workspace/.claude/skills/omelia-vangelo-4-fonti/scripts/sync_telegram_archivio.py</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StartInterval</key>
+    <integer>3600</integer>
+    <key>StandardOutPath</key>
+    <string>/Users/salvatoremonte/.config/omelie_sync/sync.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/salvatoremonte/.config/omelie_sync/sync.error.log</string>
+</dict>
+</plist>
